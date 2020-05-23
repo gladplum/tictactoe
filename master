@@ -1,0 +1,135 @@
+# Create a 3x3 board.
+
+# Define underscore and vertical line
+s = ' '
+u = '-'
+v = '|'
+board_clean = [[s,s,s,v,s,s,s,v,s,s,s],
+        [u,u,u,v,u,u,u,v,u,u,u],
+        [s,s,s,v,s,s,s,v,s,s,s],
+        [u,u,u,v,u,u,u,v,u,u,u],
+        [s,s,s,v,s,s,s,v,s,s,s]]
+
+# Define Print Board
+def print_board(board):
+    for i in range(len(board)):
+        print(''.join(board[i]))
+
+# Assign number that ties to the location of [row,column] on the board
+coordinates = {1:[4,1],
+         2:[4,5],
+         3:[4,9],
+         4:[2,1],
+         5:[2,5],
+         6:[2,9],
+         7:[0,1],
+         8:[0,5],
+         9:[0,9]}
+
+# Print Board Master
+board_master = [c[:] for c in board_clean]
+print('Let\'s play Tic Tac Toe!')
+print('Here is the board : \n')
+print_board(board_master)
+
+# Give Game Rules
+board_copy = [c[:] for c in board_clean]
+for i in coordinates:
+    board_copy[coordinates[i][0]][coordinates[i][1]] = str(i)
+print ('This is your Tic Tac Toe\nEach Players to insert no 1 to 9 in turns\n')
+print_board(board_copy)
+
+# Define Criteria for winning tic tac toe
+# Crit for any players to win :
+# 1. If All Vertical : [1,4,7] , [2,5,8], [3,6,9]
+# 2. If All Horizontal : [1,4,7] , [2,5,8], [3,6,9]
+# 3. If Diagonal : [1,4,7] , [2,5,8], [3,6,9]
+# 4. If Those 3 equals to the p1/p2 'x' or 'o'
+crit = [[1,4,7] , [2,5,8], [3,6,9], [1,2,3] , [4,5,6], [7,8,9], [1,5,9] , [3,5,7]]
+
+# Initialization of Play Again
+play_again = True
+
+while play_again == True:
+    
+    # Initiallization of winning status and chosen
+    p1_win = False
+    p2_win = False
+    chosen = []
+    
+    # Player 1 choose x or o
+    print('Player 1 to choose x or o')
+    p1 = str(input('Input x or o :   '))
+    p2 = ''
+    if p1 == 'x':
+        p2 = 'o'
+    else:
+        p2 ='x'
+    
+    # Declare Game Start
+    print(f'Game Start!\nPlayer 1 is {p1}, Player 2 is {p2}')
+
+    while not p1_win and not p2_win:
+        p1_input = int(input ('Player 1. Insert no.1 to 9:  '))
+        
+        while p1_input in chosen:
+            print('Number is chosen already, please choose different number!')
+            p1_input = int(input ('Player 1. Insert no.1 to 9:  '))
+            
+        board_master[coordinates[p1_input][0]][coordinates[p1_input][1]] = p1
+
+        for i in range(len(crit)):
+            if board_master[coordinates[crit[i][0]][0]][coordinates[crit[i][0]][1]] == board_master[coordinates[crit[i][1]][0]][coordinates[crit[i][1]][1]] == board_master[coordinates[crit[i][2]][0]][coordinates[crit[i][2]][1]] == p1:
+                p1_win = True
+                break
+        print_board(board_master)
+
+        chosen.append(p1_input)
+        chosen.sort()
+        print(f'Number chosen are {chosen}')
+        if chosen == list(range(1,10)):
+            break
+
+        if p1_win:
+            break
+
+            
+        p2_input = int(input ('Player 2. Insert no.1 to 9:  '))
+        
+        while p2_input in chosen:
+            print('Number is chosen already, please choose different number!')
+            p2_input = int(input ('Player 2. Insert no.1 to 9:  '))
+            
+        board_master[coordinates[p2_input][0]][coordinates[p2_input][1]] = p2
+
+        for i in range(len(crit)):
+            if board_master[coordinates[crit[i][0]][0]][coordinates[crit[i][0]][1]] == board_master[coordinates[crit[i][1]][0]][coordinates[crit[i][1]][1]] == board_master[coordinates[crit[i][2]][0]][coordinates[crit[i][2]][1]] == p2:
+                p2_win = True
+                break
+        print_board(board_master)   
+
+        chosen.append(p2_input)
+        chosen.sort()
+        print(f'Number chosen are {chosen}')
+        if chosen in list(range(1,10)):
+            break
+
+    if p1_win:
+        print('Player 1 wins!')
+    elif p2_win:
+        print('Player 2 wins!')
+    else:
+        print('Game Draw!')
+
+    # Refresh the board_master
+    print('Ensure board is refreshed')
+    board_master = [c[:] for c in board_clean]
+    print_board(board_master)
+    
+    play_again_input = input('Play again? (Y/N)')
+    if play_again_input.lower() == 'y':
+        play_again = True
+    else:
+        play_again = False
+        
+print ('Game Ends! Thank you for playing!')
